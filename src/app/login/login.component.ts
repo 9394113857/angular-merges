@@ -1,3 +1,4 @@
+// login.component.ts
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { LoginService } from '../login.service';
@@ -10,27 +11,26 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(public srvc: LoginService, public rtr: Router) {}
+  constructor(public loginService: LoginService, public router: Router) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
-  // Creating a FormGroup instance to use for form control
-  loginfrm = new FormGroup({
+  loginForm = new FormGroup({
     uname: new FormControl(),
     pwd: new FormControl()
   });
 
   CheckUser() {
-    alert();
-    var res = this.srvc.ValidateUser(this.loginfrm.value["uname"], this.loginfrm.value["pwd"]);
-    if (res) {
-      localStorage.setItem("uname", this.loginfrm.value["uname"]);
-      localStorage.setItem("pwd", this.loginfrm.value["pwd"]);
-        this.rtr.navigate(["home"]); 
-    } else {
-      alert("Invalid User..");
-    }
+    const username = this.loginForm.value["uname"];
+    const password = this.loginForm.value["pwd"];
+    this.loginService.login(username, password).subscribe(
+      (response) => {
+        this.loginService.setSession(response);
+        this.router.navigate(['home']);
+      },
+      (error) => {
+        alert("Invalid User..");
+      }
+    );
   }
-
 }
