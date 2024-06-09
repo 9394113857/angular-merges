@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Route, Router } from '@angular/router';
+import { Router } from '@angular/router';
+import { LoginService } from '../login.service';
 
 @Component({
   selector: 'app-home',
@@ -7,17 +8,13 @@ import { Route, Router } from '@angular/router';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  
-  constructor(public rtr : Router) {}
 
-  ngOnInit(): void {
-    // throw new Error('Method not implemented.');
-    // custom code:-
+  constructor(public rtr: Router, public srvc: LoginService) {}
+
+  ngOnInit(): void {}
+
+  logout() {
+    this.srvc.logout();
+    this.rtr.navigate(['login']);
   }
-
-  LogoutUser(){
-    localStorage.clear();
-    this.rtr.navigate(["login"]);
-  }
-
 }

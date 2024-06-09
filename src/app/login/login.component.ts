@@ -1,6 +1,5 @@
-// login.component.ts
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { LoginService } from '../login.service';
 import { Router } from '@angular/router';
 
@@ -11,25 +10,25 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(public loginService: LoginService, public router: Router) {}
+  constructor(public srvc: LoginService, public rtr: Router) {}
 
   ngOnInit(): void {}
 
   loginForm = new FormGroup({
-    uname: new FormControl(),
-    pwd: new FormControl()
+    uname: new FormControl('', [Validators.required]),
+    pwd: new FormControl('', [Validators.required])
   });
 
-  CheckUser() {
-    const username = this.loginForm.value["uname"];
-    const password = this.loginForm.value["pwd"];
-    this.loginService.login(username, password).subscribe(
-      (response) => {
-        this.loginService.setSession(response);
-        this.router.navigate(['home']);
+  onSubmit() {
+    const uname = this.loginForm.value.uname!;
+    const pwd = this.loginForm.value.pwd!;
+    this.srvc.login(uname, pwd).subscribe(
+      response => {
+        this.srvc.setSession(response);
+        this.rtr.navigate(['home']);
       },
-      (error) => {
-        alert("Invalid User..");
+      error => {
+        alert('Invalid User..');
       }
     );
   }
